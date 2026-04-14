@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FF0033">
+  <meta name="description" content="CRAIG ROSS Fitness Tracker — Track workouts, water, sleep & more.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CR Fitness">
+  <title>CR Fitness — CRAIG ROSS</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <!-- Reminder Banner -->
+  <div id="reminder-banner" role="alert" aria-live="polite"></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       Pages
+  ═══════════════════════════════════════════════════════ -->
+
+  <!-- Dashboard -->
+  <main id="page-dashboard" class="page active" role="main" aria-label="Dashboard"></main>
+
+  <!-- Workout -->
+  <main id="page-workout" class="page" role="main" aria-label="Workout Tracker"></main>
+
+  <!-- Water -->
+  <main id="page-water" class="page" role="main" aria-label="Water Tracker"></main>
+
+  <!-- Sleep -->
+  <main id="page-sleep" class="page" role="main" aria-label="Sleep Tracker"></main>
+
+  <!-- Profile -->
+  <main id="page-profile" class="page" role="main" aria-label="Profile & Settings"></main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       Modals
+  ═══════════════════════════════════════════════════════ -->
+  <div id="modal-workout" class="modal" role="dialog" aria-modal="true" aria-label="Workout Entry"></div>
+  <div id="modal-sleep" class="modal" role="dialog" aria-modal="true" aria-label="Sleep Log Entry"></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FAB
+  ═══════════════════════════════════════════════════════ -->
+  <button id="fab" aria-label="Quick Add">＋</button>
+
+  <!-- ═══════════════════════════════════════════════════════
+       Bottom Navigation
+  ═══════════════════════════════════════════════════════ -->
+  <nav id="bottom-nav" role="navigation" aria-label="Main Navigation">
+    <button class="nav-btn active" data-nav="dashboard" aria-label="Dashboard" aria-current="page">
+      <span class="nav-icon" aria-hidden="true">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-btn" data-nav="workout" aria-label="Workout Tracker">
+      <span class="nav-icon" aria-hidden="true">🏋️</span>
+      <span class="nav-label">Workout</span>
+    </button>
+    <button class="nav-btn" data-nav="water" aria-label="Water Tracker">
+      <span class="nav-icon" aria-hidden="true">💧</span>
+      <span class="nav-label">Water</span>
+    </button>
+    <button class="nav-btn" data-nav="sleep" aria-label="Sleep Tracker">
+      <span class="nav-icon" aria-hidden="true">😴</span>
+      <span class="nav-label">Sleep</span>
+    </button>
+    <button class="nav-btn" data-nav="profile" aria-label="Profile">
+      <span class="nav-icon" aria-hidden="true">👤</span>
+      <span class="nav-label">Profile</span>
+    </button>
+  </nav>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+</div><!-- #app -->
+
+<!-- Scripts (order matters) -->
+<script src="js/storage.js"></script>
+<script src="js/health.js"></script>
+<script src="js/workout.js"></script>
+<script src="js/water.js"></script>
+<script src="js/sleep.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
