@@ -856,7 +856,7 @@ const App = (() => {
   }
 
   function resetWater() {
-    if (!confirm('Reset today\'s water intake?')) return;
+    if (!confirm("Reset today's water intake?")) return;
     Storage.resetTodayWater();
     state.todayWater = Storage.getTodayWater();
     renderWaterPage();
