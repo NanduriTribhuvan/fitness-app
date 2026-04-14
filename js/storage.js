@@ -129,6 +129,9 @@ const Storage = (() => {
     logs[todayKey()] = [];
     return set(keys.WATER_LOGS, logs);
   }
+  function saveWaterLogs(logs) {
+    return set(keys.WATER_LOGS, logs);
+  }
 
   // ── Sleep ─────────────────────────────────────────────────
   function getSleepLogs() {
@@ -195,7 +198,7 @@ const Storage = (() => {
     getSettings, saveSettings,
     getWorkouts, saveWorkout, deleteWorkout,
     getPRs, updatePR,
-    getWaterLogs, getTodayWater, addWaterEntry, resetTodayWater,
+    getWaterLogs, getTodayWater, addWaterEntry, resetTodayWater, saveWaterLogs,
     getSleepLogs, saveSleepLog, deleteSleepLog,
     getStreaks, updateStreak,
     getLastReminder, setLastReminder,

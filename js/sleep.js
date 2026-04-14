@@ -89,8 +89,8 @@ const Sleep = (() => {
     const score = calcScore(entry);
 
     // Duration
-    const idealMin = age <= 25 ? 7 : 7;
-    const idealMax = age <= 25 ? 9 : 9;
+    const idealMin = age <= 17 ? 8 : 7;
+    const idealMax = age <= 17 ? 10 : 9;
     if (durationHrs < idealMin) {
       recs.push({ icon: '⏰', text: `You slept ${formatDuration(durationHrs)}. Aim for ${idealMin}–${idealMax} hrs. Try sleeping 30 mins earlier.` });
     } else if (durationHrs > idealMax + 1) {

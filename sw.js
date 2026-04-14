@@ -21,8 +21,9 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' })));
-    }).catch(() => {
-      // Silently fail if some assets can't be cached (e.g., CDN resources)
+    }).catch(err => {
+      // Log cache failures to aid debugging
+      console.warn('[SW] Cache addAll failed (some assets may not be available offline):', err);
     })
   );
   self.skipWaiting();
@@ -45,7 +46,9 @@ self.addEventListener('fetch', event => {
   if (event.request.url.startsWith('chrome-extension://')) return;
 
   // Skip CDN requests (Chart.js) — network first
-  if (event.request.url.includes('cdn.jsdelivr.net')) {
+  let reqHostname = '';
+  try { reqHostname = new URL(event.request.url).hostname; } catch (_) {}
+  if (reqHostname === 'cdn.jsdelivr.net') {
     event.respondWith(
       fetch(event.request).catch(() => caches.match(event.request))
     );

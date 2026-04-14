@@ -18,6 +18,16 @@ const App = (() => {
     charts: {},
   };
 
+  // ── HTML Escape Utility ───────────────────────────────────
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+  }
+
   // ── Motivational Quotes ───────────────────────────────────
   const QUOTES = [
     { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
@@ -138,14 +148,15 @@ const App = (() => {
 
     if (last !== today) {
       banner.classList.add('show');
+      const firstName = esc(profile.username.split(' ')[0]);
+      const emailHref = `mailto:${esc(profile.email)}?subject=Fitness%20Check-in&body=Hi%20${encodeURIComponent(profile.username)}%2C%20time%20to%20log%20your%20fitness%20data%21`;
       banner.innerHTML = `
         <span class="reminder-icon">🔔</span>
         <div class="reminder-text">
           <strong>Daily Check-in Reminder</strong>
-          <span>Log your workout & stats, ${profile.username.split(' ')[0]}!</span>
+          <span>Log your workout &amp; stats, ${firstName}!</span>
         </div>
-        <a href="mailto:${profile.email}?subject=Fitness%20Check-in&body=Hi%20${encodeURIComponent(profile.username)}%2C%20time%20to%20log%20your%20fitness%20data%21"
-           class="reminder-cta" target="_blank">📧 Email</a>
+        <a href="${emailHref}" class="reminder-cta" target="_blank" rel="noopener">📧 Email</a>
         <button class="reminder-close" onclick="App.dismissReminder()">✕</button>
       `;
     }
@@ -195,18 +206,18 @@ const App = (() => {
       <!-- Header -->
       <div class="dash-header">
         <div>
-          <p class="dash-greeting">${getGreeting()},</p>
-          <h1 class="dash-name">${profile.username}</h1>
+          <p class="dash-greeting">${esc(getGreeting())},</p>
+          <h1 class="dash-name">${esc(profile.username)}</h1>
         </div>
-        <div class="dash-avatar">${profile.username.charAt(0)}</div>
+        <div class="dash-avatar">${esc(profile.username.charAt(0))}</div>
       </div>
 
       <!-- Quote Banner -->
       <div class="quote-banner glass-card">
         <span class="quote-icon">💬</span>
         <div>
-          <p class="quote-text">"${quote.text}"</p>
-          <p class="quote-author">— ${quote.author}</p>
+          <p class="quote-text">&ldquo;${esc(quote.text)}&rdquo;</p>
+          <p class="quote-author">— ${esc(quote.author)}</p>
         </div>
       </div>
 
@@ -838,7 +849,7 @@ const App = (() => {
     const today = Storage.todayKey();
     if (logs[today]) {
       logs[today].splice(index, 1);
-      localStorage.setItem('cr_fitness_water_logs', JSON.stringify(logs));
+      Storage.saveWaterLogs(logs);
     }
     state.todayWater = Storage.getTodayWater();
     renderWaterPage();
@@ -1002,7 +1013,6 @@ const App = (() => {
 
     const now = new Date();
     const yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
-    const defaultBed = `${String(yesterday.getMonth()+1).padStart(2,'0')}/${String(yesterday.getDate()).padStart(2,'0')}/${yesterday.getFullYear()} 22:30`;
 
     modal.innerHTML = `
       <div class="modal-content">
@@ -1115,14 +1125,14 @@ const App = (() => {
     page.innerHTML = `
       <!-- Avatar / Header -->
       <div class="profile-header glass-card">
-        <div class="profile-avatar">${profile.username.charAt(0)}</div>
+        <div class="profile-avatar">${esc(profile.username.charAt(0))}</div>
         <div class="profile-info">
-          <h2 class="profile-name">${profile.username}</h2>
-          <p class="profile-email">${profile.email}</p>
+          <h2 class="profile-name">${esc(profile.username)}</h2>
+          <p class="profile-email">${esc(profile.email)}</p>
           <div class="profile-badges">
-            <span class="badge">Age ${report.age}</span>
-            <span class="badge">${profile.weight}kg</span>
-            <span class="badge">${profile.heightFt}'${profile.heightIn}"</span>
+            <span class="badge">Age ${esc(report.age)}</span>
+            <span class="badge">${esc(profile.weight)}kg</span>
+            <span class="badge">${esc(profile.heightFt)}&apos;${esc(profile.heightIn)}&quot;</span>
           </div>
         </div>
       </div>
@@ -1132,35 +1142,35 @@ const App = (() => {
       <div class="form-card glass-card">
         <div class="form-group">
           <label>Username</label>
-          <input type="text" id="p-username" class="form-input" value="${profile.username}">
+          <input type="text" id="p-username" class="form-input" value="${esc(profile.username)}">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Weight (kg)</label>
-            <input type="number" id="p-weight" class="form-input" value="${profile.weight}" min="20" max="300">
+            <input type="number" id="p-weight" class="form-input" value="${esc(profile.weight)}" min="20" max="300">
           </div>
           <div class="form-group">
             <label>Height (cm)</label>
-            <input type="number" id="p-heightCm" class="form-input" value="${profile.heightCm}" min="100" max="250">
+            <input type="number" id="p-heightCm" class="form-input" value="${esc(profile.heightCm)}" min="100" max="250">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Height Ft</label>
-            <input type="number" id="p-heightFt" class="form-input" value="${profile.heightFt}" min="3" max="8">
+            <input type="number" id="p-heightFt" class="form-input" value="${esc(profile.heightFt)}" min="3" max="8">
           </div>
           <div class="form-group">
             <label>Height In</label>
-            <input type="number" id="p-heightIn" class="form-input" value="${profile.heightIn}" min="0" max="11">
+            <input type="number" id="p-heightIn" class="form-input" value="${esc(profile.heightIn)}" min="0" max="11">
           </div>
         </div>
         <div class="form-group">
           <label>Date of Birth</label>
-          <input type="date" id="p-dob" class="form-input" value="${profile.dob}">
+          <input type="date" id="p-dob" class="form-input" value="${esc(profile.dob)}">
         </div>
         <div class="form-group">
           <label>Email (reminders)</label>
-          <input type="email" id="p-email" class="form-input" value="${profile.email}">
+          <input type="email" id="p-email" class="form-input" value="${esc(profile.email)}">
         </div>
         <div class="form-group">
           <label>Gender</label>
@@ -1173,7 +1183,7 @@ const App = (() => {
           <label>Activity Level</label>
           <select id="p-activity" class="form-input">
             ${Object.entries(Health.ACTIVITY_LABELS).map(([k, v]) => `
-              <option value="${k}" ${profile.activityLevel === k ? 'selected' : ''}>${v}</option>
+              <option value="${esc(k)}" ${profile.activityLevel === k ? 'selected' : ''}>${esc(v)}</option>
             `).join('')}
           </select>
         </div>
@@ -1201,23 +1211,23 @@ const App = (() => {
       <div class="metrics-grid">
         <div class="metric-card glass-card">
           <div class="metric-title">BMI</div>
-          <div class="metric-value" style="color:${report.bmiCat.color}">${report.bmi}</div>
-          <div class="metric-label">${report.bmiCat.label}</div>
+          <div class="metric-value" style="color:${esc(report.bmiCat.color)}">${esc(report.bmi)}</div>
+          <div class="metric-label">${esc(report.bmiCat.label)}</div>
         </div>
         <div class="metric-card glass-card">
           <div class="metric-title">BMR</div>
-          <div class="metric-value">${report.bmr}</div>
+          <div class="metric-value">${esc(report.bmr)}</div>
           <div class="metric-label">kcal/day at rest</div>
         </div>
         <div class="metric-card glass-card">
           <div class="metric-title">TDEE</div>
-          <div class="metric-value">${report.tdee}</div>
+          <div class="metric-value">${esc(report.tdee)}</div>
           <div class="metric-label">kcal/day total</div>
         </div>
         <div class="metric-card glass-card">
           <div class="metric-title">Goal Calories</div>
-          <div class="metric-value">${report.goalCals}</div>
-          <div class="metric-label">${profile.goal.replace('_', ' ')}</div>
+          <div class="metric-value">${esc(report.goalCals)}</div>
+          <div class="metric-label">${esc(profile.goal.replace('_', ' '))}</div>
         </div>
       </div>
 
@@ -1226,15 +1236,15 @@ const App = (() => {
       <div class="glass-card form-card">
         <div class="form-group">
           <label>Daily Reminder Time</label>
-          <input type="time" id="s-reminder" class="form-input" value="${settings.reminderTime}">
+          <input type="time" id="s-reminder" class="form-input" value="${esc(settings.reminderTime)}">
         </div>
         <div class="form-group">
           <label>Daily Water Goal (ml)</label>
-          <input type="number" id="s-watergoal" class="form-input" value="${settings.waterGoal}" min="500" max="5000">
+          <input type="number" id="s-watergoal" class="form-input" value="${esc(settings.waterGoal)}" min="500" max="5000">
         </div>
-        <a href="mailto:${profile.email}?subject=Fitness%20Check-in%20Reminder&body=Hi%20${encodeURIComponent(profile.username)}%2C%20time%20to%20log%20your%20fitness%20data!"
-           class="btn-secondary btn-full" style="text-align:center;display:block;text-decoration:none">
-          📧 Send Test Reminder to ${profile.email}
+        <a href="mailto:${esc(profile.email)}?subject=Fitness%20Check-in%20Reminder&body=Hi%20${encodeURIComponent(profile.username)}%2C%20time%20to%20log%20your%20fitness%20data!"
+           class="btn-secondary btn-full" style="text-align:center;display:block;text-decoration:none" rel="noopener">
+          📧 Send Test Reminder to ${esc(profile.email)}
         </a>
         <button class="btn-primary btn-full mt-1" onclick="App.saveSettings()">💾 Save Settings</button>
       </div>
